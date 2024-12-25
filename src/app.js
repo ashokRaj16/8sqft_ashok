@@ -24,7 +24,19 @@ app.get('/send-email', async (req, res) => {
 
         // You can use both method.
         const emailTemplate = await renderEmailTemplate('email', {name : 'User'}, app);
-        await sendMailTemplate(mailOptions.to, mailOptions.subject, mailOptions.text, emailTemplate);
+        // *** wait for email send response, for OTP we have to wait for mail to send.
+        // await sendMailTemplate(mailOptions.to, mailOptions.subject, mailOptions.text, emailTemplate);
+        
+        // *** send email in background in next phase of iteration. for order confirmation mail we don't need to wait.
+        setImmediate( async () => {
+            try {
+                await sendMailTemplate(mailOptions.to, mailOptions.subject, mailOptions.text, emailTemplate);
+                console.log('sent in back')
+            }
+            catch{
+                console.log('Error log in back...');
+            }
+        })
 
         res.json({status: true, message: 'Email sent successfully'});
 
