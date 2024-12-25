@@ -7,10 +7,11 @@ import morgan from 'morgan';
 import { xss } from 'express-xss-sanitizer';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv'
-
-import app from './src/app.js';
+// import { sendMailTemplate } from './src/helper/mailHelper.js';
 
 dotenv.config();
+import app from './src/app.js';
+
 
 const port = process.env.PORT || 5000;
 const server = express();
@@ -26,7 +27,7 @@ if(process.env.NODE_ENV === "development") {
 else if(process.env.NODE_ENV === "production") {
     const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
     app.use(morgan('combined', { stream: accessLogStream }));
-    console.log(accessLogStream);
+    // console.log(accessLogStream);
 }
 
 server.use(helmet());
@@ -38,3 +39,4 @@ server.use(app);
 server.listen(port, () => {
     console.log(`Server running on ${port} `);
 })
+
